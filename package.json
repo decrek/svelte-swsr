@@ -2,23 +2,35 @@
 	"name": "svelte-swsr",
 	"version": "0.0.1",
 	"scripts": {
-		"dev": "svelte-kit dev",
-		"build": "svelte-kit build",
+		"dev": "run-p dev:*",
+		"predev:svelte": "rm -rf .svelte-kit .cloudflare && touch src/service-worker.js",
+		"dev:svelte": "svelte-kit dev",
+		"dev:worker": "esbuild src/entry.worker.js --outfile=./static/service-worker.js --bundle --format=esm --define:process.env.NODE_ENV='development' --watch",
+		"prebuild": "rm -rf .svelte-kit .cloudflare && touch src/service-worker.js",
+		"build": "run-s build:svelte build:worker",
+		"build:worker": "esbuild src/entry.worker.js --outfile=./src/service-worker.js --minify --bundle --format=esm --define:process.env.NODE_ENV='production'",
+		"build:svelte": "svelte-kit build",
+		"postbuild": "cp src/service-worker.js ./.svelte-kit/output/client/service-worker.js && cp ./src/service-worker.js ./.cloudflare/assets/service-worker.js",
 		"package": "svelte-kit package",
 		"preview": "svelte-kit preview",
 		"prepare": "svelte-kit sync",
 		"lint": "prettier --check --plugin-search-dir=. . && eslint .",
-		"format": "prettier --write --plugin-search-dir=. ."
+		"format": "prettier --write --plugin-search-dir=. .",
+		"wrangler": "wrangler"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "next",
+		"@sveltejs/adapter-cloudflare-workers": "^1.0.0-next.44",
 		"@sveltejs/kit": "next",
+		"chokidar-cli": "^3.0.0",
 		"eslint": "^8.16.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-svelte3": "^4.0.0",
+		"npm-run-all": "^4.1.5",
 		"prettier": "^2.6.2",
 		"prettier-plugin-svelte": "^2.7.0",
-		"svelte": "^3.44.0"
+		"svelte": "^3.44.0",
+		"wrangler": "^2.0.11"
 	},
 	"type": "module"
 }
