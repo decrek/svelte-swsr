@@ -1,7 +1,3 @@
-/* eslint-disable no-restricted-globals */
-/* global clients */
-// eslint-disable-next-line no-unused-vars
-
 import { manifest } from '../.svelte-kit/output/server/manifest.js';
 import { Server } from '../.svelte-kit/output/server/index.js';
 import revManifest from '../.svelte-kit/output/client/_app/immutable/manifest.json';
@@ -16,7 +12,6 @@ const JS_FILES = revManifestEntries.map((entry) => `/_app/immutable/${entry.file
 const CORE_CACHE_FILES = JS_FILES.concat(CSS_FILES);
 
 self.addEventListener('install', (event) => {
-	console.log(CORE_CACHE_FILES);
 	event.waitUntil(
 		caches
 			.open('core_cache')
