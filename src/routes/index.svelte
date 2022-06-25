@@ -1,4 +1,20 @@
+<script context="module">
+    /** @type {import('./__types/index').Load} */
+    export async function load({ fetch, url }) {
+        const queryParams = url.searchParams ? `?${url.searchParams.toString()}` : ''
+        const response = await fetch(`/api/recipe${queryParams}`);
+
+        return {
+            status: response.status,
+            props: {
+                recipes: response.ok && (await response.json())
+            }
+        };
+    }
+</script>
+
 <script>
+    export let recipes;
     let count = 0;
 
     function handleClick() {
@@ -13,3 +29,19 @@
 <button on:click={handleClick}>
     clicks: {count}
 </button>
+
+<form method="get">
+    <label>
+        Search
+        <input type="search" name="q">
+    </label>
+    <button type="submit">Search</button>
+</form>
+
+<ul>
+    {#each recipes as recipe}
+        <li>
+            <a href="/recipes/{recipe.id}">{recipe.name}</a>
+        </li>
+    {/each}
+</ul>

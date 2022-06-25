@@ -1,6 +1,7 @@
 import { manifest } from '../.svelte-kit/output/server/manifest.js';
 import { Server } from '../.svelte-kit/output/server/index.js';
 import revManifest from '../.svelte-kit/output/client/_app/immutable/manifest.json';
+const server = new Server(manifest);
 
 const revManifestEntries = Object.values(revManifest);
 const CSS_FILES = revManifestEntries
@@ -9,7 +10,10 @@ const CSS_FILES = revManifestEntries
 	.filter(Boolean);
 
 const JS_FILES = revManifestEntries.map((entry) => `/_app/immutable/${entry.file}`);
-const CORE_CACHE_FILES = JS_FILES.concat(CSS_FILES);
+const CORE_CACHE_FILES = JS_FILES.concat(CSS_FILES, [
+	'/content.sqlite',
+	'https://sql.js.org/dist/sql-wasm.wasm'
+]);
 
 self.addEventListener('install', (event) => {
 	event.waitUntil(
@@ -47,8 +51,6 @@ self.addEventListener('fetch', async (event) => {
 });
 
 async function handler(req) {
-	const server = new Server(manifest);
-
 	return await server.respond(req, {
 		platform: { env: {}, context: {} },
 		getClientAddress() {
