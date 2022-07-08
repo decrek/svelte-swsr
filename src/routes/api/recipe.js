@@ -1,6 +1,6 @@
 import initSqlJs from 'sql.js';
 
-export async function get({ params, url }) {
+export async function get({ url }) {
 	let SQLPromise;
 	let bufferPromise;
 	let db;
@@ -22,6 +22,19 @@ export async function get({ params, url }) {
 		db = await new SQL.Database(new Uint8Array(buffer));
 	}
 
+	// detail page
+	const id = url.searchParams.get('id');
+	if (id) {
+		const stmt = db.prepare(`SELECT * FROM recipes WHERE id = ${id}`);
+		const recipe = stmt.getAsObject({});
+		stmt.free();
+
+		return {
+			body: recipe
+		};
+	}
+
+	// search or all
 	const q = url.searchParams.get('q');
 	const stmt = q
 		? db.prepare(`SELECT * FROM recipes WHERE name LIKE '%${q}%';`)
@@ -32,6 +45,8 @@ export async function get({ params, url }) {
 		const row = stmt.getAsObject();
 		recipes.push(row);
 	}
+
+	stmt.free();
 
 	return {
 		body: recipes

@@ -45,6 +45,8 @@ self.addEventListener('fetch', async (event) => {
 	const { request } = event;
 	if (request.headers.get('Accept').includes('text/html')) {
 		event.respondWith(handler(request));
+	} else if (request.url.includes('/api')) {
+		event.respondWith(handler(request));
 	} else if (isCoreGetRequest(request)) {
 		event.respondWith(caches.open('core_cache').then((cache) => cache.match(request.url)));
 	}

@@ -5,12 +5,23 @@ initSqlJs().then(async (SQL) => {
 	// Load the db
 	const db = new SQL.Database();
 
-	db.run('CREATE TABLE recipes (name);');
+	db.run(
+		'CREATE TABLE recipes (\n' +
+			'    id INTEGER PRIMARY KEY AUTOINCREMENT,\n' +
+			'    name TEXT NOT NULL,\n' +
+			'    description TEXT NOT NULL,\n' +
+			'    image [] TEXT NOT NULL\n' +
+			');'
+	);
 	const seedResults = await seed();
 
 	seedResults.forEach(async (recipe) => {
-		const stmt = db.prepare('INSERT INTO recipes VALUES (@name);');
-		stmt.bind({ '@name': recipe.name });
+		const stmt = db.prepare('INSERT INTO recipes VALUES (@id, @name, @description, @image);');
+		stmt.bind({
+			'@name': recipe.name,
+			'@description': 'This is delicious',
+			'@image': 'https://picsum.photos/200/300'
+		});
 		stmt.step();
 	});
 

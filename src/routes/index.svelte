@@ -15,25 +15,22 @@
 
 <script>
     export let recipes;
-    let count = 0;
+    let form;
 
-    function handleClick() {
-        count += 1;
+    async function onSubmit() {
+        const searchParams = new URLSearchParams(new FormData(form)).toString()
+        const queryParams = searchParams ? `?${searchParams}` : ''
+        recipes = await fetch(`/api/recipe${queryParams}`).then(res => res.json())
     }
 </script>
 
 <h1 class="font-larger">This is initially rendered on Cloudflare Workers and after registering a service worker rendered in a serviceworker!</h1>
 <p>Visit <a href="/about">About</a> just to see another route</p>
 
-<h2 class="font-large">And here we have a counter in order to test client side hydration.</h2>
-<button on:click={handleClick}>
-    clicks: {count}
-</button>
-
-<form method="get">
+<form method="get" bind:this={form} on:submit|preventDefault={onSubmit}>
     <label>
         Search
-        <input type="search" name="q">
+        <input type="search" name="q" on:input={onSubmit}>
     </label>
     <button type="submit">Search</button>
 </form>
