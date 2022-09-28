@@ -16,12 +16,14 @@
 		"prepare": "svelte-kit sync",
 		"lint": "prettier --check --plugin-search-dir=. . && eslint .",
 		"format": "prettier --write --plugin-search-dir=. .",
-		"netlify": "netlify"
+		"netlify": "netlify",
+		"watch": "chokidar \"src/**/*.*\" \"!src/service-worker.js\" -c \"npm run build\""
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/adapter-cloudflare-workers": "^1.0.0-next.44",
 		"@sveltejs/kit": "next",
+		"chokidar-cli": "^3.0.0",
 		"eslint": "^8.16.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-svelte3": "^4.0.0",
@@ -35,6 +37,6 @@
 		"@sveltejs/adapter-netlify": "^1.0.0-next.64",
 		"better-sqlite3": "^7.5.3",
 		"netlify-cli": "^10.5.1",
-		"sql.js": "^1.7.0"
+		"sql.js": "^1.8.0"
 	}
 }

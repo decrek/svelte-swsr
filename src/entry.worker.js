@@ -10,10 +10,7 @@ const CSS_FILES = revManifestEntries
 	.filter(Boolean);
 
 const JS_FILES = revManifestEntries.map((entry) => `/_app/immutable/${entry.file}`);
-const CORE_CACHE_FILES = JS_FILES.concat(CSS_FILES, [
-	'/content.sqlite',
-	'https://sql.js.org/dist/sql-wasm.wasm'
-]);
+const CORE_CACHE_FILES = JS_FILES.concat(CSS_FILES, ['/content.sqlite', '/sql-wasm.wasm']);
 
 self.addEventListener('install', (event) => {
 	event.waitUntil(

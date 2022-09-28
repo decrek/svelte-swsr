@@ -12,10 +12,10 @@ export async function get({ url }) {
 			bufferPromise = fetch(url.origin + '/content.sqlite').then((res) => res.arrayBuffer());
 		} else {
 			// service worker
-			SQLPromise = await initSqlJs({
-				locateFile: (file) => `https://sql.js.org/dist/${file}`
+			SQLPromise = initSqlJs({
+				locateFile: (file) => `/${file}`
 			});
-			bufferPromise = await caches.match('/content.sqlite').then((res) => res.arrayBuffer());
+			bufferPromise = caches.match('/content.sqlite').then((res) => res.arrayBuffer());
 		}
 
 		const [SQL, buffer] = await Promise.all([SQLPromise, bufferPromise]);
